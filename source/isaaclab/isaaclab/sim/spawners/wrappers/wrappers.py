@@ -91,6 +91,8 @@ def spawn_multi_asset(
     # acquire stage
     stage = stage_utils.get_current_stage()
 
+    chosen_proto_paths: list[str] = []
+
     # manually clone prims if the source prim path is a regex expression
     # note: unlike in the cloner API from Isaac Sim, we do not "reset" xforms on the copied prims.
     #   This is because the "spawn" calls during the creation of the proto prims already handles this operation.
@@ -103,6 +105,9 @@ def spawn_multi_asset(
                 proto_path = random.choice(proto_prim_paths)
             else:
                 proto_path = proto_prim_paths[index % len(proto_prim_paths)]
+            
+            chosen_proto_paths.append(proto_path)
+
             # copy the proto prim
             Sdf.CopySpec(env_spec.layer, Sdf.Path(proto_path), env_spec.layer, Sdf.Path(prim_path))
 
