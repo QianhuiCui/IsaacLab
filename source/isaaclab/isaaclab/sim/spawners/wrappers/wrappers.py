@@ -106,6 +106,13 @@ def spawn_multi_asset(
             # copy the proto prim
             Sdf.CopySpec(env_spec.layer, Sdf.Path(proto_path), env_spec.layer, Sdf.Path(prim_path))
 
+    for target_path, proto_path in zip(prim_paths, chosen_proto_paths):
+        prim = stage.GetPrimAtPath(target_path)
+        prim_proto = stage.GetPrimAtPath(proto_path)
+        refs = prim_proto.GetMetadata('references').GetAddedOrExplicitItems()
+        asset_path = refs[0].assetPath
+        prim.SetCustomDataByKey("sourceUsdPath", asset_path)
+        
     # delete the dataset prim after spawning
     prim_utils.delete_prim(template_prim_path)
 
